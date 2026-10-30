@@ -1,0 +1,24 @@
+{
+  "name": "youtube-backend",
+  "version": "1.0.0",
+  "description": "it a demo youtube backend",
+  "keywords": [
+    "backend",
+    "sadi",
+    "explains"
+  ],
+  "license": "ISC",
+  "author": "Minhaz Sadi",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "nodemon -r dotenv/config --experimental-json-modules src/index.js",
+    "start": "node src/index.js",
+    "build": "node src/index,js"
+  },
+  "dependencies": {
+    "dotenv": "^18.0.9",
+    "express": "^5.3.0",
+    "nodemon": "^3.1.14"
+  }
+}
