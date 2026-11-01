@@ -5,7 +5,13 @@ import {User} from "../model/user.model.js"
 import { uploadOnCloudinary } from "../utils/cloudinary.js"
 import {ApiResponse} from "../utils/ApiResponse.js"
 
+
+
+
 const registerUser = asyncHandler(async (req, res) => {
+    
+    console.log("Register controller hit!");
+
     /*
     1) get user info from fronted
     2) validate user info -> empty
@@ -21,10 +27,18 @@ const registerUser = asyncHandler(async (req, res) => {
     // step-1
     const {fullName, email, username, password} = req.body
 
+
+    console.log("Request Body:", req.body);
+    console.log("Full Name:", fullName);
+    console.log("Email:", email);
+    console.log("Username:", username);
     // step-2
-    if([fullName, email, username, password].some((field)=>field.trim() == "")){
-        throw new ApiError(400, "all fiedls are required")
-    }
+    // if([fullName, email, username, password].some((field)=>field.trim() == "")){
+    //     throw new ApiError(400, "all fiedls are required")
+    // }
+    if ([fullName, email, username, password].some((field) => !field || !field.trim())) {
+    throw new ApiError(400, "All fields are required");
+}
 
     // step-3
     const existedUser = await User.findOne({
@@ -39,6 +53,8 @@ const registerUser = asyncHandler(async (req, res) => {
     }
 
 
+
+
     // step-4
     const avatarLocalPath = req.files?.avatar[0]?.path
     let coverImageLocalPath;
@@ -51,6 +67,8 @@ const registerUser = asyncHandler(async (req, res) => {
 
     }
 
+    console.log(req.files);
+    console.log(avatarLocalPath);
 
     // step-5
     const avatar = await uploadOnCloudinary(avatarLocalPath)
@@ -59,6 +77,8 @@ const registerUser = asyncHandler(async (req, res) => {
         throw new ApiError(400, "avatar not found")
     }
 
+
+    
 
     //step-6
     const user = await User.create({
@@ -85,15 +105,10 @@ const registerUser = asyncHandler(async (req, res) => {
     return res.status(201).json(
         new ApiResponse(201, createdUser, "user Registered Successful")
     )
-
-
-
-
-
-
-
-    
+   
 })
+
+
 
 const loginUser = (req, res) => {
 

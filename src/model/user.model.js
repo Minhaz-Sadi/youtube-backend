@@ -48,7 +48,7 @@ userSchema.pre("save",  async function() {
     if(!this.isModified("password")) return next()
 
     this.password = await bcrypt.hash(this.password, 10)
-    return next()
+    // next()
 })
 
 export const User = mongoose.model('User', userSchema); // User table follows userSchema
