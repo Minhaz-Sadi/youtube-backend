@@ -14,6 +14,6 @@ app.use(cors({
 
 // localhost:3000/api/v1/users/register
 app.use("api/v1/users", userRouter)
-app.use("api/v1/video", videoRouter)
+// app.use("api/v1/video", videoRouter)
 
 export default app

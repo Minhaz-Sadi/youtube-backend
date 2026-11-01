@@ -22,6 +22,8 @@ router.route("/register").post(
 router.route("/login").post(loginUser)
 
 
-router.route("/logout").post()
+router.route("/logout").post((req, res) => {
+    res.send("Logout route working");
+});
 
 export default router
