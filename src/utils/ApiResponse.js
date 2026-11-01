@@ -15,3 +15,6 @@ class ApiResponse{
 
 const value = new ApiResponse(500, "sapmle string", "success");
 console.log(value);
+
+export { ApiResponse };
+

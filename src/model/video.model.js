@@ -42,3 +42,14 @@ const videoSchema = new mongoose.Schema({
 
 
 export const Video = mongoose.model('Video', videoSchema); // Videos(auto mongobd creates)
+
+
+/*
+
+workflow -->
+
+user uplaod file  --> store this file in our local disk storage(multer package)
+--> from local we upload the file in cloudinary
+--> loacal stoage file delete
+
+*/

@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-
+import bcrypt from "bcrypt"
 
 const userSchema = new mongoose.Schema({
     username: {
@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema({
         trim: true,
         index: true
     },
-    avater: {
+    avatar: {
         type: String, // cloudinary url
     },
     coverImage: {
@@ -44,5 +44,11 @@ const userSchema = new mongoose.Schema({
     timestamps: true // time update of creation
 })
 
+userSchema.pre("save",  async function() {
+    if(!this.isModified("password")) return next()
+
+    this.password = await bcrypt.hash(this.password, 10)
+    return next()
+})
 
 export const User = mongoose.model('User', userSchema); // User table follows userSchema

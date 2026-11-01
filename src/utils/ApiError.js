@@ -21,6 +21,6 @@ class ApiError extends Error{
     }
 }
 
-throw new ApiError(404, "server error");
+// throw new ApiError(404, "server error");
 
-
+export { ApiError };
