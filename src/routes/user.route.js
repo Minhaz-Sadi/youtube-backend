@@ -22,6 +22,6 @@ router.route("/register").post(
 router.route("/login").post(loginUser)
 
 
-// router.route("/logout").post()
+router.route("/logout").post()
 
 export default router
