@@ -40,21 +40,30 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: [true, "password is required"] // massage show
+    },
+    refreshToken: {
+        type: String
     }
 },{
     timestamps: true // time update of creation
 })
 
 userSchema.pre("save",  async function() {
-    if(!this.isModified("password")) return next()
+    //if(!this.isModified("password")) return next()
 
     this.password = await bcrypt.hash(this.password, 10)
     // next()
 })
 
+// check password validate
+userSchema.methods.isPasswordCorrect = async function (password) {
+    
+    return await bcrypt.compare(password, this.password)
+}
 
 
-userSchema.method.generateAccessToken = function(){
+
+userSchema.methods.generateAccessToken = function(){
     return jwt.sign(
         {
             // payload;
@@ -74,7 +83,7 @@ userSchema.method.generateAccessToken = function(){
     )
 }
 
-userSchema.method.generateRefreshToken = function(){
+userSchema.methods.generateRefreshToken = function(){
     return jwt.sign(
         {
             // payload;

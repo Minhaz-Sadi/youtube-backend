@@ -6,8 +6,6 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js"
 import {ApiResponse} from "../utils/ApiResponse.js"
 
 
-
-
 const registerUser = asyncHandler(async (req, res) => {
     
     console.log("Register controller hit!");
@@ -110,8 +108,88 @@ const registerUser = asyncHandler(async (req, res) => {
 
 
 
-const loginUser = (req, res) => {
+const loginUser = asyncHandler(async (req, res) => {
+    
+    console.log("Login controller hit!");
 
-}
+    /*
+    1) we have to extarct the data from req
+    2) check
+    3) find the user
+    4) password check
+    5) generate accessd and refresh toekn 
+    6) refresh token save in DB
+    7) cookies --> save reshesh and access token
+    8) response
+    */
+
+    const {email, username, password} = req.body
+    // test
+    console.log(email, username, password);
+    
+    if(!username && !email){
+        throw new ApiError(400, "username and email required")
+    }
+
+    const user = await User.findOne({
+        $or: [
+            {email}, {username}
+        ]
+    })
+
+    //3rd step
+    if(!user){
+        throw new ApiError(404, "user is not found !!!")
+    }
+
+
+    const isPasswordValid = await user.isPasswordCorrect(password)
+
+    if(!isPasswordValid){
+        throw new ApiError(401, "Invalid Password")
+
+    }
+
+    // step-5
+
+    const accessToken = await user.generateAccessToken();
+
+    const refreshToken = await user.generateRefreshToken();
+
+
+    //step-6
+    user.refreshToken = refreshToken
+    await user.save({validateBeforeSave: false})
+
+    const loggedInUser = await User.findById(user._id).select("-password -refreshToken")
+
+    if(!loggedInUser){
+        throw new ApiError(500, "Something went wrong")
+
+    }
+
+    const options = {
+        httpOnly: true,
+        secure: true
+    }
+
+
+    return res
+    .status(200)
+    .cookie("access_token", accessToken, options)
+    .cookie("refresh_token", refreshToken, options)
+    .json(
+        new ApiResponse(200, {
+            user: loggedInUser,
+            accessToken,
+            refreshToken
+        }
+    ,"user logged in successfully")
+    )
+
+
+
+})
+
 
 export {registerUser, loginUser}
