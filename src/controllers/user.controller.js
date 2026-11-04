@@ -192,4 +192,24 @@ const loginUser = asyncHandler(async (req, res) => {
 })
 
 
-export {registerUser, loginUser}
+
+
+// logout
+
+const logoutUser = asyncHandler(async(req, res) => {
+    // 1. find ta user
+    // 2.update its refresh token value to undefined
+    // 3. cookies --> refresh ans access token clear
+    // 4. send a response
+
+    await User.findByIdAndUpdate(
+        req.user,{
+            $sunset: {
+                
+            } 
+        }
+    )
+})
+
+
+export {registerUser, loginUser, logoutUser}
